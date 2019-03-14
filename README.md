@@ -4,9 +4,10 @@
 
 ### Goal 
 Process the XML files into a python object
-Break out the statistics for each machine and aggregate 
+Break out the statistics for each day or hour 
 
 ### Purpose 
+Provides Hourly and Daily KPIs for the library Self-Check stations
 
 ### Methodology 
 

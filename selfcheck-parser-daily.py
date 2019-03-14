@@ -1,4 +1,4 @@
-""" Parse and aggregate the selfcheck XML files and output csv """
+""" Parse and aggregate the selfcheck Daily XML file and output csv """
 
 import csv
 import untangle
@@ -16,7 +16,6 @@ try:
     obj = untangle.parse('data/201902_Daily_AllDeviceStatistics.xml')
 except  Exception:
     raise("Unable to parse input file")
-    exit(1)
 
 # create output file & write header row
 with open(output_filename, 'w') as output_file:
