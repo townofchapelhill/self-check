@@ -18,11 +18,11 @@ Provides Hourly and Daily KPIs for the library Self-Check stations
 
 ### Data Source
 Library staff downloads appropriate XML file from Bibliotheca web portal on a regular schedule
-file is stored at \\chfs\...
+file is stored at ```\\chfs\...```
 ### Output 
-A csv file is stored at \\chfs\...
+A csv file is stored at ```\\chfs\...```
 ### Transformations
-Output is limited to Librsary Open Hours, which is stored in the code as a Dictionary - library_hours
+Output is limited to Library Open Hours, which is stored in the code as a Dictionary - library_hours
 
 ### Constraints
 #### Library Open Hours
