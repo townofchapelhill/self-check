@@ -11,13 +11,13 @@ output_filename = 'selfcheck_hourly.csv'
 
 # Library open hours
 library_hours = {
-      "Monday":   {"open": 9, "close": 20},
-      "Tuesday":  {"open": 9, "close": 20},
-      "Wednesday":{"open": 9, "close": 20},
-      "Thursday": {"open": 9, "close": 20},
-      "Friday":   {"open": 9, "close": 18},
-      "Saturday": {"open": 10, "close": 18},
-      "Sunday":   {"open": 10, "close": 18}
+      "Monday":   {"open": 8, "close": 20},
+      "Tuesday":  {"open": 8, "close": 20},
+      "Wednesday":{"open": 8, "close": 20},
+      "Thursday": {"open": 8, "close": 20},
+      "Friday":   {"open": 8, "close": 18},
+      "Saturday": {"open": 9, "close": 18},
+      "Sunday":   {"open": 9, "close": 18}
     }
 
 
