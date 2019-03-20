@@ -5,9 +5,8 @@ import untangle
 
 
 # Identify fields for CSV output
-#csv_header = ['Date', 'CheckoutSuccess', 'CheckoutFail', 'CheckinSuccess', 'CheckinFail', 'ReturnSuccess', 'ReturnFail', 'ReturnSessionStartCount','ItemSortedCount', 'ItemRejectedCount', 'RenewedSuccess','RenewedFail', 'UserLoginSuccess','UserLoginFail', 'LmsOfflineCount', 'PaymentSuccess', 'PaymentFailed', 'CoinboxEmptyCount', 'SuccessfulTransactions', 'FailedTransactions', 'CheckOutBookCount', 'TotalTransactions']
-csv_header = ['Date', 'Time', 'Device Name', 'CheckoutSuccess', 'CheckoutFail', 'CheckinSuccess', 'CheckinFail', 'ReturnSessionStartCount', 'ReturnSuccess', 'ReturnFail', 'RenewedSuccess','RenewedFail', 'UserLoginSuccess','UserLoginFail', 'LmsOfflineCount', 'PaymentSuccess', 'PaymentFailed', 'CoinboxEmptyCount', 'SuccessfulTransactions', 'FailedTransactions', 'CheckOutBookCount', 'TotalTransactions']
-output_fields = ['DeviceName', 'txtCheckoutOkCountRow1', 'txtCheckoutFailedCountRow1', 'txtCheckinOkCountRow1', 'txtCheckinFailedCountRow1', 'txtReturnSessionStartCountRow1', 'ItemSortedCount', 'ItemRejectedCount', 'txtRenewedOkCountRow1', 'txtRenewedFailedCountRow1', 'txtUserLoginCountRow1', 'txtUserLoginFailedCountRow1', 'txtLmsOfflineCountRow1', 'txtCashPaymentCountRow1', 'txtCashPaymentFailedCountRow1', 'txtCoinboxEmptyCountRow1', 'txtSuccessfulTransactionsCountRow1', 'txtFailedTransactionsCountRow1', 'MediaTypeTotal1', 'txtTotalRow1']
+csv_header = ['Date', 'Time', 'Device Name', 'CheckoutSuccess', 'CheckoutFail', 'RenewedSuccess','RenewedFail', 'PaymentSuccess', 'PaymentFailed', 'SuccessfulTransactions', 'FailedTransactions', 'CheckOutBookCount', 'TotalTransactions']
+output_fields = ['DeviceName', 'txtCheckoutOkCountRow1', 'txtCheckoutFailedCountRow1', 'txtRenewedOkCountRow1', 'txtRenewedFailedCountRow1', 'txtCashPaymentCountRow1', 'txtCashPaymentFailedCountRow1', 'txtSuccessfulTransactionsCountRow1', 'txtFailedTransactionsCountRow1', 'MediaTypeTotal1', 'txtTotalRow1']
 output_filename = 'selfcheck_hourly.csv'
 
 # Library open hours
@@ -23,7 +22,7 @@ library_hours = {
 
 
 def convert24(str1):
-    # Given a time as '[H]H:MM [AP]M' return the hour as an integer in the range {0-23} 
+    # Given a time as '[H]H:MM [A|P]M' return the hour as an integer in the range {0-23} 
     # capture the hours portion of the string
     hour=int(str1.split(':')[0])
 
@@ -46,6 +45,7 @@ def convert24(str1):
 # Open and Parse the xml file
 
 try:
+    # extract data from a known location and filename
     obj = untangle.parse('data/201902_Hourly_AllDeviceStatistics.xml')
 except  Exception:
     raise("Unable to parse input file")
@@ -64,12 +64,10 @@ with open(output_filename, 'w') as output_file:
         csv_output[0] = obj.Report.Tablix1.EventDateTimePaging_Collection.EventDateTimePaging[date_row]['txtDateHeader']
         # extract the day of the week
         dayofweek=csv_output[0].split(',')[0]
-        # print("date: "+csv_output[0] + " dayof week: " + dayofweek)
         # iterate on hour
         for  hour_row in range(0, len(obj.Report.Tablix1.EventDateTimePaging_Collection.EventDateTimePaging[date_row].EventDateTime_Collection.EventDateTime)):
             # extract the hour
             csv_output[1] = hour = obj.Report.Tablix1.EventDateTimePaging_Collection.EventDateTimePaging[date_row].EventDateTime_Collection.EventDateTime[hour_row]['tbDateToggle']
-            # print("hour: "+csv_output[1] + " " + str(convert24(hour)))
             # only output to csv only during library open hours
             if convert24(hour) >= library_hours[dayofweek]['open'] and convert24(hour) <= library_hours[dayofweek]['close']:
             #iterate on self-check stations
@@ -78,9 +76,7 @@ with open(output_filename, 'w') as output_file:
                     for element in range(0, len(output_fields)):
                          field = output_fields[element]
                          csv_output[element+2] = obj.Report.Tablix1.EventDateTimePaging_Collection.EventDateTimePaging[date_row].EventDateTime_Collection.EventDateTime[hour_row].LocationFullName_Collection.LocationFullName.Details_Collection.Details[station_row][field]
-                         #print(str(element) + ": " + output_fields[element] + ": " + csv_output[element+2])
                     csvwriter.writerow(csv_output)
-
 output_file.close()
 
 
