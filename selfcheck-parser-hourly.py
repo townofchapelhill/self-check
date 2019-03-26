@@ -4,7 +4,7 @@ import csv
 import untangle
 
 # import access keys and locations
-import secrets
+# import secrets
 import filename_secrets
 
 
@@ -25,7 +25,7 @@ library_hours = {
 
 
 def convert24(str1):
-    # Given a time as '[H]H:MM [A|P]M' return the hour as an integer in the range {0-23} 
+    # Given a time as '[H]H:MM [A|P]M' return the hour as an integer in the range {0-23}
     # capture the hours portion of the string
     hour=int(str1.split(':')[0])
 
