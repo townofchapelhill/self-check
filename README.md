@@ -20,9 +20,8 @@ Provides Hourly and Daily KPIs for the library Self-Check stations
 
 ### Data Source
 Library staff downloads appropriate XML file from Bibliotheca web portal on a regular schedule
-file is stored at ```\\chfs\...```
 ### Output 
-A csv file is stored at ```\\chfs\...```
+A csv file is stored in a location specified in filename_secrets.py
 ### Transformations
 Output is limited to Library Open Hours, which is stored in the code as a Dictionary - library_hours
 
@@ -33,7 +32,8 @@ Suggest creating a CLASS in a common import library to create a single changepoi
 #### XML structure changes
 Changes to the Bibliotheca XML file structure will require remapping the variables.
 #### Input/Output Files
-Locations of the Input and Output files are included in the code. Suggest parameterizing this information.
+File locations are stored in filename_secrets.py
+
 #### Libraries Required
 This script requires the [untangle](https://untangle.readthedocs.io/en/latest/) library via ```pip3 install untangle``` in the run environment
 
