@@ -3,11 +3,14 @@
 import csv
 import untangle
 
+# import access keys and locations
+import secrets
+import filename_secrets
+
 
 # Identify fields for CSV output
 csv_header = ['Date', 'Time', 'Device Name', 'CheckoutSuccess', 'CheckoutFail', 'RenewedSuccess','RenewedFail', 'PaymentSuccess', 'PaymentFailed', 'SuccessfulTransactions', 'FailedTransactions', 'CheckOutBookCount', 'TotalTransactions']
 output_fields = ['DeviceName', 'txtCheckoutOkCountRow1', 'txtCheckoutFailedCountRow1', 'txtRenewedOkCountRow1', 'txtRenewedFailedCountRow1', 'txtCashPaymentCountRow1', 'txtCashPaymentFailedCountRow1', 'txtSuccessfulTransactionsCountRow1', 'txtFailedTransactionsCountRow1', 'MediaTypeTotal1', 'txtTotalRow1']
-output_filename = 'selfcheck_hourly.csv'
 
 # Library open hours
 library_hours = {
@@ -46,12 +49,12 @@ def convert24(str1):
 
 try:
     # extract data from a known location and filename
-    obj = untangle.parse('data/201902_Hourly_AllDeviceStatistics.xml')
+    obj = untangle.parse(filename_secrets.self_check_input)
 except  Exception:
     raise("Unable to parse input file")
 
 # create output file & write header row
-with open(output_filename, 'w') as output_file:
+with open(filename_secrets.self_check_output, 'w') as output_file:
     csvwriter = csv.writer(output_file, dialect='excel')
     csvwriter.writerow(csv_header)
 
