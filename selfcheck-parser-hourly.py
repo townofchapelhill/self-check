@@ -49,12 +49,12 @@ def convert24(str1):
 
 try:
     # extract data from a known location and filename
-    obj = untangle.parse(filename_secrets.self_check_input)
+    obj = untangle.parse(filename_secrets.self_check_input_hourly)
 except  Exception:
     raise("Unable to parse input file")
 
 # create output file & write header row
-with open(filename_secrets.self_check_output, 'w') as output_file:
+with open(filename_secrets.self_check_output_hourly, 'w') as output_file:
     csvwriter = csv.writer(output_file, dialect='excel')
     csvwriter.writerow(csv_header)
 

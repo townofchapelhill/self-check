@@ -3,6 +3,10 @@
 import csv
 import untangle
 
+# import access keys and locations
+# import secrets
+import filename_secrets
+
 
 # Identify fields for CSV output
 #csv_header = ['Date', 'CheckoutSuccess', 'CheckoutFail', 'CheckinSuccess', 'CheckinFail', 'ReturnSuccess', 'ReturnFail', 'ReturnSessionStartCount','ItemSortedCount', 'ItemRejectedCount', 'RenewedSuccess','RenewedFail', 'UserLoginSuccess','UserLoginFail', 'LmsOfflineCount', 'PaymentSuccess', 'PaymentFailed', 'CoinboxEmptyCount', 'SuccessfulTransactions', 'FailedTransactions', 'CheckOutBookCount', 'TotalTransactions']
@@ -13,12 +17,12 @@ output_filename = 'selfcheck.csv'
 # Open and Parse the xml file
 
 try:
-    obj = untangle.parse('data/201902_Daily_AllDeviceStatistics.xml')
+    obj = untangle.parse(filename_secrets.self_check_input_daily)
 except  Exception:
     raise("Unable to parse input file")
 
 # create output file & write header row
-with open(output_filename, 'w') as output_file:
+with open(filename_secrets.self_check_output_daily, 'w') as output_file:
     csvwriter = csv.writer(output_file, dialect='excel')
     csvwriter.writerow(csv_header)
 
@@ -31,7 +35,7 @@ with open(output_filename, 'w') as output_file:
         for element in range(0, len(output_fields)):
              field = output_fields[element]
              csv_output[element] = obj.Report.Tablix1.EventDateTimePaging_Collection.EventDateTimePaging.EventDateTime_Collection.EventDateTime[row][field]
-             print(str(element) + ": " + output_fields[element] + ": " + csv_output[element])
+             # print(str(element) + ": " + output_fields[element] + ": " + csv_output[element])
         csvwriter.writerow(csv_output)
 
 output_file.close()
