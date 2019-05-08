@@ -33,19 +33,9 @@ try:
     print("Input Filename: " + self_check_input_hourly)
     self_check_output_hourly = os.getenv("SelfCheck_output_filename")
     print("Output Filename: " + self_check_output_hourly)
-
-    #self_check_input_hourly = 'data/All - Hours - Yesterday-2019-04-29 0314.xlsx'
     workbook  = load_workbook(filename = self_check_input_hourly, read_only=True)
 except  Exception:
     raise("Unable to parse input file")
-
-# Find the date embedded in the filename
-#match = re.match('^\d{4}-\d{2}-\d{2}', self_check_input_hourly)
-#if match:
-#    file_date=match.group()
-#else:
-#    raise("Unable to parse date from input file name")
-file_date=""
 
 # create output file & write header row
 with open(self_check_output_hourly, 'w') as output_file:
@@ -55,6 +45,7 @@ with open(self_check_output_hourly, 'w') as output_file:
     # Each day has a separate worksheet - iterate
     sheet_names = workbook.sheetnames
     for current_sheet in range(0, len(sheet_names)):
+        # set access to the current worksheet
         workbook.active = current_sheet
         worksheet = workbook.active
         worksheet_list = list(worksheet.values)
@@ -68,10 +59,10 @@ with open(self_check_output_hourly, 'w') as output_file:
                 match = re.match('^\d+\s\w+\s\d{4}', worksheet_list[row][0])
                 if match:
                     sheet_date=match.group()
-                    # Calculate the Day of Week
+                    # Calculate the Day of Week - used for Open Hours selection
                     dayofweek=DayofWeek(sheet_date)
                     continue
-            # insert the date as the first field
+            # insert the date as the first field in the row
             csv_output[0] = sheet_date
             # process each row and write to CSV
             if worksheet_list[row][0] == "Total":
@@ -80,10 +71,11 @@ with open(self_check_output_hourly, 'w') as output_file:
             # Find the hourly summary rows
             match = re.match('^\d{2}:\d{2}', worksheet_list[row][0])
             if match:
-                # lookup if it is a Library Open Hour
+                # lookup if it is within Library Open Hours
                 row_time = int(worksheet_list[row][0][:2])
                 if  row_time >= library_hours[dayofweek]['open'] and row_time <= library_hours[dayofweek]['close']:
                     for element in range(0, len(output_fields)):
+                        # Build the output row
                         csv_output[element+1] = worksheet_list[row][output_fields[element]]
                     csvwriter.writerow(csv_output)
 

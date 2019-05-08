@@ -6,7 +6,7 @@ import csv
 
 # import access keys and locations
 # import secrets
-import filename_secrets
+# import filename_secrets
 
 
 # Identify fields for CSV output
@@ -15,7 +15,7 @@ csv_header = ['Date', 'CheckoutSuccess', 'CheckoutFail', 'CheckinSuccess', 'Chec
 output_fields = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19]
 output_filename = 'data/selfcheck-Daily-2019-05-05.csv'
 
-# Open the workbook and set up access
+# Open the workbook and set up access to the worksheet
 try:
     self_check_input_daily = os.getenv("SelfCheck_input_filename")
     print("Input Filename: " + self_check_input_daily)

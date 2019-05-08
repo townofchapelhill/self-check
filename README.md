@@ -5,8 +5,7 @@
 ## Convert the Self Check XML or Excel files to aggregated CSV
 
 ### Goal 
-Process the XML files into a python object
-Break out the statistics for each day or hour 
+Process the XML or XLSX files to extract daily or hourly statistics
 
 ### Purpose 
 Provides Hourly and Daily KPIs for the library Self-Check stations
@@ -20,10 +19,14 @@ Provides Hourly and Daily KPIs for the library Self-Check stations
 
 ### Data Source
 libraryconnect.com - selfcheck reports sent to opendata@townofchapelhill.org
+(for XLSX) a powershell script locates the input file and points to it via an environment variable
+
 ### Output 
 A csv file is stored in a location specified in filename_secrets.py
+(for XLSX) The filename is stored in an environment variable
 ### Transformations
-Output is limited to Library Open Hours, which is stored in the code as a Dictionary - library_hours
+
+(for Hourly) Output is limited to Library Open Hours, which is stored in the code as a Dictionary - library_hours
 
 ### Constraints
 
@@ -33,7 +36,7 @@ Changes to Library Open Hours currently requires a code change.
 #### report structure changes
 Changes to the Bibliotheca file structure will require remapping the variables.
 #### Input/Output Files
-File locations are stored in filename_secrets.py
+File locations are stored in filename_secrets.py or loaded into environment variables 
 
 #### Libraries Required
 [untangle (XML)](https://untangle.readthedocs.io/en/latest/) library via ```pip3 install untangle``` in the run environment
