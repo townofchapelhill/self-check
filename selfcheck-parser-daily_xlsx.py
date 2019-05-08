@@ -13,18 +13,23 @@ import filename_secrets
 csv_header = ['Date', 'CheckoutSuccess', 'CheckoutFail', 'CheckinSuccess', 'CheckinFail', 'ReturnSessionStartCount', 'ReturnSuccess', 'ReturnFail', 'RenewedSuccess','RenewedFail', 'UserLoginSuccess','UserLoginFail', 'LmsOfflineCount', 'PaymentSuccess', 'PaymentFailed', 'CoinboxEmptyCount', 'SuccessfulTransactions', 'FailedTransactions', 'TotalTransactions']
 
 output_fields = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19]
-output_filename = 'selfcheck.csv'
+output_filename = 'data/selfcheck-Daily-2019-05-05.csv'
 
 # Open the workbook and set up access
 try:
-    workbook  = load_workbook(filename = 'data/All - Daily - Last Week-2019-04-29 0314.xlsx', read_only=True)
+    self_check_input_daily = os.getenv("SelfCheck_input_filename")
+    print("Input Filename: " + self_check_input_daily)
+    self_check_output_daily = os.getenv("SelfCheck_output_filename")
+    print("Output Filename: " + self_check_output_daily)
+
+    workbook  = load_workbook(filename = self_check_input_daily, read_only=True)
     worksheet = workbook.active
     worksheet_list = list(worksheet.values)
 except  Exception:
     raise("Unable to parse input file")
 
 # create output file & write header row
-with open(filename_secrets.self_check_output_daily, 'w') as output_file:
+with open(self_check_output_daily, 'w') as output_file:
     csvwriter = csv.writer(output_file, dialect='excel')
     csvwriter.writerow(csv_header)
 

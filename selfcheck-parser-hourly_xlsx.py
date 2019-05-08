@@ -1,18 +1,15 @@
 """ Parse and aggregate the selfcheck Hourly Excel file and output csv """
 
 from openpyxl import load_workbook
+import datetime
 import re
 import csv
+import os
 
 # Identify fields for CSV output (daily)
-csv_header = ['Date', 'CheckoutSuccess', 'CheckoutFail', 'CheckinSuccess', 'CheckinFail', 'ReturnSessionStartCount', 'ReturnSuccess', 'ReturnFail', 'RenewedSuccess','RenewedFail', 'UserLoginSuccess','UserLoginFail', 'LmsOfflineCount', 'PaymentSuccess', 'PaymentFailed', 'CoinboxEmptyCount', 'SuccessfulTransactions', 'FailedTransactions', 'TotalTransactions']
-
-output_fields = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19]
+csv_header = ['Date','Time','CheckoutSuccess','CheckoutFail','RenewedSuccess','RenewedFail','UserLoginSuccess','UserLoginFail','PaymentSuccess','PaymentFailed','CoinboxEmptyCount', 'SuccessfulTransactions', 'FailedTransactions', 'TotalTransactions']
+output_fields = [0, 1, 2, 8, 9, 10, 11, 13, 14, 15, 17, 18, 19]
 output_filename = 'selfcheck.csv'
-
-# Identify fields for CSV output (hourly)
-csv_header = ['Date', 'Time', 'Device Name', 'CheckoutSuccess', 'CheckoutFail', 'RenewedSuccess','RenewedFail', 'PaymentSuccess', 'PaymentFailed', 'SuccessfulTransactions', 'FailedTransactions', 'CheckOutBookCount', 'TotalTransactions']
-output_fields = ['DeviceName', 'txtCheckoutOkCountRow1', 'txtCheckoutFailedCountRow1', 'txtRenewedOkCountRow1', 'txtRenewedFailedCountRow1', 'txtCashPaymentCountRow1', 'txtCashPaymentFailedCountRow1', 'txtSuccessfulTransactionsCountRow1', 'txtFailedTransactionsCountRow1', 'MediaTypeTotal1', 'txtTotalRow1']
 
 # Library open hours
 library_hours = {
@@ -25,96 +22,71 @@ library_hours = {
       "Sunday":   {"open": 9, "close": 18}
     }
 
-
-def convert24(str1):
-    # Given a time as '[H]H:MM [A|P]M' return the hour as an integer in the range {0-23}
-    # capture the hours portion of the string
-    hour=int(str1.split(':')[0])
-
-    # Checking if last two elements of time
-    # is AM and first two elements are 12
-    if str1[-2:] == "AM" and hour == 12:
-        return 0
-    # return AM hours
-    elif str1[-2:] == "AM":
-        return hour
-
-    # Checking if last two elements of time
-    # is PM and first two elements are 12
-    elif str1[-2:] == "PM" and hour == 12:
-        return hour
-    else:
-        # add 12 to hours
-        return hour + 12
+# Calculate DayofWeek
+def DayofWeek(datestring):
+    dt = datetime.datetime.strptime(datestring, '%d %B %Y')
+    return datetime.date.strftime(dt, '%A')
 
 # Open the workbook and set up access
 try:
-    workbook  = load_workbook(filename = 'data/All - Hours - Yesterday-2019-04-29 0314.xlsx', read_only=True)
-    worksheet = workbook.active
-    worksheet_list = list(worksheet.values)
+    self_check_input_hourly = os.getenv("SelfCheck_input_filename")
+    print("Input Filename: " + self_check_input_hourly)
+    self_check_output_hourly = os.getenv("SelfCheck_output_filename")
+    print("Output Filename: " + self_check_output_hourly)
+
+    #self_check_input_hourly = 'data/All - Hours - Yesterday-2019-04-29 0314.xlsx'
+    workbook  = load_workbook(filename = self_check_input_hourly, read_only=True)
 except  Exception:
     raise("Unable to parse input file")
 
+# Find the date embedded in the filename
+#match = re.match('^\d{4}-\d{2}-\d{2}', self_check_input_hourly)
+#if match:
+#    file_date=match.group()
+#else:
+#    raise("Unable to parse date from input file name")
+file_date=""
+
 # create output file & write header row
-with open(filename_secrets.self_check_output_daily, 'w') as output_file:
+with open(self_check_output_hourly, 'w') as output_file:
     csvwriter = csv.writer(output_file, dialect='excel')
     csvwriter.writerow(csv_header)
 
-
-    # Select each row aggregate with a date (dd month yyyy) in the first field (daily total)
-    for row in range(0, len(worksheet_list)):
-        # clear the list
-        csv_output=['null']*len(output_fields)
-        # process each row and write to CSV
-        if worksheet_list[row][0] == "Total":
-            # Final line of spreadsheet
-            break
-        match = re.match('^\d+\s\w+\s+\d{4}', worksheet_list[row][0])
-        if match:
-            for element in range(0, len(output_fields)):
-                csv_output[element] = worksheet_list[row][output_fields[element]]
-            csvwriter.writerow(csv_output)
-
-    # close and terminate
-    output_file.close()
-
-
-# Open and Parse the xml file
-
-try:
-    # extract data from a known location and filename
-    obj = untangle.parse(filename_secrets.self_check_input_hourly)
-except  Exception:
-    raise("Unable to parse input file")
-
-# create output file & write header row
-with open(filename_secrets.self_check_output_hourly, 'w') as output_file:
-    csvwriter = csv.writer(output_file, dialect='excel')
-    csvwriter.writerow(csv_header)
-
-    # process each row and write to CSV
-
-    # iterate on date
-    for date_row in range(0, len(obj.Report.Tablix1.EventDateTimePaging_Collection.EventDateTimePaging)):
-        csv_output = ['null']*len(csv_header) # initialize the output list
-        # get the date
-        csv_output[0] = obj.Report.Tablix1.EventDateTimePaging_Collection.EventDateTimePaging[date_row]['txtDateHeader']
-        # extract the day of the week
-        dayofweek=csv_output[0].split(',')[0]
-        # iterate on hour
-        for  hour_row in range(0, len(obj.Report.Tablix1.EventDateTimePaging_Collection.EventDateTimePaging[date_row].EventDateTime_Collection.EventDateTime)):
-            # extract the hour
-            csv_output[1] = hour = obj.Report.Tablix1.EventDateTimePaging_Collection.EventDateTimePaging[date_row].EventDateTime_Collection.EventDateTime[hour_row]['tbDateToggle']
-            # only output to csv only during library open hours
-            if convert24(hour) >= library_hours[dayofweek]['open'] and convert24(hour) <= library_hours[dayofweek]['close']:
-            #iterate on self-check stations
-                for station_row in range(2, len(obj.Report.Tablix1.EventDateTimePaging_Collection.EventDateTimePaging[date_row].EventDateTime_Collection.EventDateTime[hour_row].LocationFullName_Collection.LocationFullName.Details_Collection.Details)):
-                    # extract each element and place in csv output row
+    # Each day has a separate worksheet - iterate
+    sheet_names = workbook.sheetnames
+    for current_sheet in range(0, len(sheet_names)):
+        workbook.active = current_sheet
+        worksheet = workbook.active
+        worksheet_list = list(worksheet.values)
+        sheet_date = None
+        # Select each row aggregate with a time in the first field
+        for row in range(0, len(worksheet_list)):
+            # clear the row array
+            csv_output=['null']*len(csv_header)
+            # if it finds the date in a row, save it and skip to next row
+            if sheet_date is None:
+                match = re.match('^\d+\s\w+\s\d{4}', worksheet_list[row][0])
+                if match:
+                    sheet_date=match.group()
+                    # Calculate the Day of Week
+                    dayofweek=DayofWeek(sheet_date)
+                    continue
+            # insert the date as the first field
+            csv_output[0] = sheet_date
+            # process each row and write to CSV
+            if worksheet_list[row][0] == "Total":
+                # Final line of spreadsheet
+                break
+            # Find the hourly summary rows
+            match = re.match('^\d{2}:\d{2}', worksheet_list[row][0])
+            if match:
+                # lookup if it is a Library Open Hour
+                row_time = int(worksheet_list[row][0][:2])
+                if  row_time >= library_hours[dayofweek]['open'] and row_time <= library_hours[dayofweek]['close']:
                     for element in range(0, len(output_fields)):
-                         field = output_fields[element]
-                         csv_output[element+2] = obj.Report.Tablix1.EventDateTimePaging_Collection.EventDateTimePaging[date_row].EventDateTime_Collection.EventDateTime[hour_row].LocationFullName_Collection.LocationFullName.Details_Collection.Details[station_row][field]
+                        csv_output[element+1] = worksheet_list[row][output_fields[element]]
                     csvwriter.writerow(csv_output)
+
+# close and terminate
 output_file.close()
-
-
 
