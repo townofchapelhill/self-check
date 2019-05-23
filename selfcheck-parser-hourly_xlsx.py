@@ -1,15 +1,33 @@
 """ Parse and aggregate the selfcheck Hourly Excel file and output csv """
 
 from openpyxl import load_workbook
+from file_util import select_filename
 import datetime
+import time
+import pathlib
 import re
 import csv
 import os
 
+#production_datasets_path = pathlib.Path('\\CHFS\Shared Documents\OpenData\datasets')
+#selfcheck_data_path =  pathlib.Path('\\CHFS\Library\Statistics\Selfchecks')
+production_datasets_path = pathlib.Path('/ToCH/pathlib/data/datasets')
+selfcheck_data_path =  pathlib.Path('/ToCH/pathlib/data/Selfchecks')
+
+# select input/output filenames
+try: 
+        search_string = 'All-Hourly-LastWeek-*'
+        self_check_input_hourly = select_filename(selfcheck_data_path, search_string)
+        # output file is tagged with the last modification date of the input file
+        timestamp = datetime.datetime.fromtimestamp(self_check_input_hourly.stat().st_mtime)
+        filepath = "selfcheck-Hourly-" + timestamp.strftime("%Y-%m-%d") + ".csv"
+        self_check_output_hourly = production_datasets_path.joinpath(filepath)
+except  Exception:
+    raise("Unable to determine input/output files")
+
 # Identify fields for CSV output (daily)
 csv_header = ['Date','Time','CheckoutSuccess','CheckoutFail','RenewedSuccess','RenewedFail','UserLoginSuccess','UserLoginFail','PaymentSuccess','PaymentFailed','CoinboxEmptyCount', 'SuccessfulTransactions', 'FailedTransactions', 'TotalTransactions']
 output_fields = [0, 1, 2, 8, 9, 10, 11, 13, 14, 15, 17, 18, 19]
-output_filename = 'selfcheck.csv'
 
 # Library open hours
 library_hours = {
@@ -29,10 +47,8 @@ def DayofWeek(datestring):
 
 # Open the workbook and set up access
 try:
-    self_check_input_hourly = os.getenv("SelfCheck_input_filename")
-    print("Input Filename: " + self_check_input_hourly)
-    self_check_output_hourly = os.getenv("SelfCheck_output_filename")
-    print("Output Filename: " + self_check_output_hourly)
+    print(f'Input Filename: {self_check_input_hourly}')
+    print(f'Output Filename: {self_check_output_hourly}')
     workbook  = load_workbook(filename = self_check_input_hourly, read_only=True)
 except  Exception:
     raise("Unable to parse input file")
