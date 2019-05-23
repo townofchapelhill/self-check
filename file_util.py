@@ -1,8 +1,5 @@
 ### return the reverse sorted (first) filename, given a search string and directory
 
-import pathlib
-import glob
-
 def select_filename(directory, search_string):
     # print(f'Looking in {directory}')
     file_name=[]

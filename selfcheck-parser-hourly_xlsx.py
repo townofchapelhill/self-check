@@ -3,7 +3,6 @@
 from openpyxl import load_workbook
 from file_util import select_filename
 import datetime
-import time
 import pathlib
 import re
 import csv
@@ -15,7 +14,7 @@ production_datasets_path = pathlib.Path('/ToCH/pathlib/data/datasets')
 selfcheck_data_path =  pathlib.Path('/ToCH/pathlib/data/Selfchecks')
 
 # select input/output filenames
-try: 
+try:
         search_string = 'All-Hourly-LastWeek-*'
         self_check_input_hourly = select_filename(selfcheck_data_path, search_string)
         # output file is tagged with the last modification date of the input file

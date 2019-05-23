@@ -3,7 +3,6 @@
 from openpyxl  import load_workbook
 from file_util import select_filename
 import datetime
-import time
 import pathlib
 import re
 import csv
