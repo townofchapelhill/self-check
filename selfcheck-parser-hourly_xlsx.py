@@ -8,19 +8,21 @@ import re
 import csv
 import os
 
-#production_datasets_path = pathlib.Path('\\CHFS\Shared Documents\OpenData\datasets')
-#selfcheck_data_path =  pathlib.Path('\\CHFS\Library\Statistics\Selfchecks')
-production_datasets_path = pathlib.Path('/ToCH/pathlib/data/datasets')
-selfcheck_data_path =  pathlib.Path('/ToCH/pathlib/data/Selfchecks')
+production_datasets_path = pathlib.Path('//CHFS/Shared Documents/OpenData/datasets/staging')
+selfcheck_data_path =  pathlib.Path('//CHFS/Library/Statistics/Selfchecks')
+#production_datasets_path = pathlib.Path('/ToCH/pathlib/data/datasets')
+#selfcheck_data_path =  pathlib.Path('/ToCH/pathlib/data/Selfchecks')
 
 # select input/output filenames
 try:
         search_string = 'All-Hourly-LastWeek-*'
         self_check_input_hourly = select_filename(selfcheck_data_path, search_string)
+        print(f'Input file: {self_check_input_hourly}')
         # output file is tagged with the last modification date of the input file
         timestamp = datetime.datetime.fromtimestamp(self_check_input_hourly.stat().st_mtime)
         filepath = "selfcheck-Hourly-" + timestamp.strftime("%Y-%m-%d") + ".csv"
         self_check_output_hourly = production_datasets_path.joinpath(filepath)
+        print(f'Output file: {self_check_output_hourly}')
 except  Exception:
     raise("Unable to determine input/output files")
 
@@ -46,9 +48,7 @@ def DayofWeek(datestring):
 
 # Open the workbook and set up access
 try:
-    print(f'Input Filename: {self_check_input_hourly}')
-    print(f'Output Filename: {self_check_output_hourly}')
-    workbook  = load_workbook(filename = self_check_input_hourly, read_only=True)
+    workbook  = load_workbook(filename = str(self_check_input_hourly), read_only=True)
 except  Exception:
     raise("Unable to parse input file")
 

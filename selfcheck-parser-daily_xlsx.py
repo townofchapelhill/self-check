@@ -8,19 +8,21 @@ import re
 import csv
 
 
-#production_datasets_path = pathlib.Path('\\CHFS\Shared Documents\OpenData\datasets')
-#selfcheck_data_path =  pathlib.Path('\\CHFS\Library\Statistics\Selfchecks')
-production_datasets_path = pathlib.Path('/ToCH/pathlib/data/datasets')
-selfcheck_data_path =  pathlib.Path('/ToCH/pathlib/data/Selfchecks')
+production_datasets_path = pathlib.Path('//CHFS/Shared Documents/OpenData/datasets/staging')
+selfcheck_data_path =  pathlib.Path('//CHFS/Library/Statistics/Selfchecks')
+#production_datasets_path = pathlib.Path('/ToCH/pathlib/data/datasets')
+#selfcheck_data_path =  pathlib.Path('/ToCH/pathlib/data/Selfchecks')
 
 # select input/output filenames
 search_string = 'All-Daily-LastWeek-*'
 self_check_input_daily = select_filename(selfcheck_data_path, search_string)
+print(f'Input Filename: {self_check_input_daily}')
 
 # output file is tagged with the last modification date of the input file
 timestamp = datetime.datetime.fromtimestamp(self_check_input_daily.stat().st_mtime)
 filepath = "selfcheck-Daily-" + timestamp.strftime("%Y-%m-%d") + ".csv"
 self_check_output_daily = production_datasets_path.joinpath(filepath)
+print(f'Output Filename: {self_check_output_daily}')
 
 # Identify fields for CSV output
 csv_header = ['Date', 'CheckoutSuccess', 'CheckoutFail', 'CheckinSuccess', 'CheckinFail', 'ReturnSessionStartCount', 'ReturnSuccess', 'ReturnFail', 'RenewedSuccess','RenewedFail', 'UserLoginSuccess','UserLoginFail', 'LmsOfflineCount', 'PaymentSuccess', 'PaymentFailed', 'CoinboxEmptyCount', 'SuccessfulTransactions', 'FailedTransactions', 'TotalTransactions']
@@ -29,10 +31,7 @@ output_fields = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 1
 
 # Open the workbook and set up access to the worksheet
 try:
-    print(f'Input Filename: {self_check_input_daily}')
-    print(f'Output Filename: {self_check_output_daily}')
-
-    workbook  = load_workbook(filename = self_check_input_daily, read_only=True)
+    workbook  = load_workbook(filename = str(self_check_input_daily), read_only=True)
     worksheet = workbook.active
     worksheet_list = list(worksheet.values)
 except  Exception:
