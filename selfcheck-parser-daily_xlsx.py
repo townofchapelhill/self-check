@@ -6,12 +6,10 @@ import datetime
 import pathlib
 import re
 import csv
+import filename_secrets
 
-
-production_datasets_path = pathlib.Path('//CHFS/Shared Documents/OpenData/datasets/staging')
-selfcheck_data_path =  pathlib.Path('//CHFS/Library/Statistics/Selfchecks')
-#production_datasets_path = pathlib.Path('/ToCH/pathlib/data/datasets')
-#selfcheck_data_path =  pathlib.Path('/ToCH/pathlib/data/Selfchecks')
+production_datasets_path = pathlib.Path(filename_secrets.productionStaging)
+selfcheck_data_path =  pathlib.Path(filename_secrets.selfcheckStatistics)
 
 # select input/output filenames
 search_string = 'All-Daily-LastWeek-*'
@@ -37,10 +35,12 @@ try:
 except  Exception:
     raise("Unable to parse input file")
 
-# create output file & write header row
-with open(self_check_output_daily, 'w') as output_file:
+# create/append output file & write header row
+with open(self_check_output_daily, 'w+') as output_file:
     csvwriter = csv.writer(output_file, dialect='excel')
-    csvwriter.writerow(csv_header)
+    if os.stat(self_check_output_daily).st_size == 0:
+        # if this is an empty file, write header
+        csvwriter.writerow(csv_header)
 
 
     # Select each row aggregate with a date (dd month yyyy) in the first field (daily total)
