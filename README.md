@@ -23,7 +23,7 @@ libraryconnect.com - selfcheck reports sent to opendata@townofchapelhill.org
 
 ### Output 
 A csv file is stored in a directory location set in an environment variable
-(for XLSX) The filename is based on the last modifatio date of the input file
+(for XLSX) The filename selected is based on the last modification date of the input file
 ### Transformations
 
 (for Hourly) Output is limited to Library Open Hours, which is stored in the code as a Dictionary - library_hours

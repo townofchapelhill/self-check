@@ -20,7 +20,7 @@ print(f'Input Filename: {self_check_input_daily}')
 
 # output file is tagged with the last modification date of the input file
 timestamp = datetime.datetime.fromtimestamp(self_check_input_daily.stat().st_mtime)
-filepath = "selfcheck-Daily-" + timestamp.strftime("%Y-%m-%d") + ".csv"
+filepath = "selfcheck-Daily.csv"
 self_check_output_daily = production_datasets_path.joinpath(filepath)
 print(f'Output Filename: {self_check_output_daily}')
 
@@ -38,9 +38,9 @@ except  Exception:
     raise("Unable to parse input file")
 
 # create output file & write header row
-with open(self_check_output_daily, 'w') as output_file:
+with open(self_check_output_daily, 'w+') as output_file:
     csvwriter = csv.writer(output_file, dialect='excel')
-    csvwriter.writerow(csv_header)
+    #csvwriter.writerow(csv_header)
 
 
     # Select each row aggregate with a date (dd month yyyy) in the first field (daily total)
