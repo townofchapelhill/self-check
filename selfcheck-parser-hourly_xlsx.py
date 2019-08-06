@@ -7,11 +7,10 @@ import pathlib
 import re
 import csv
 import os
+import filename_secrets
 
-production_datasets_path = pathlib.Path('//CHFS/Shared Documents/OpenData/datasets/staging')
-selfcheck_data_path =  pathlib.Path('//CHFS/Library/Statistics/Selfchecks')
-#production_datasets_path = pathlib.Path('/ToCH/pathlib/data/datasets')
-#selfcheck_data_path =  pathlib.Path('/ToCH/pathlib/data/Selfchecks')
+production_datasets_path = pathlib.Path(filename_secrets.productionStaging)
+selfcheck_data_path =  pathlib.Path(filename_secrets.selfcheckStatistics)
 
 # select input/output filenames
 try:
@@ -20,12 +19,12 @@ try:
         print(f'Input file: {self_check_input_hourly}')
         # output file is tagged with the last modification date of the input file
         timestamp = datetime.datetime.fromtimestamp(self_check_input_hourly.stat().st_mtime)
-        filepath = "selfcheck-Hourly-" + timestamp.strftime("%Y-%m-%d") + ".csv"
+        filepath = "selfcheck-Hourly.csv"
         self_check_output_hourly = production_datasets_path.joinpath(filepath)
         print(f'Output file: {self_check_output_hourly}')
 except  Exception:
     raise("Unable to determine input/output files")
-
+	
 # Identify fields for CSV output (daily)
 csv_header = ['Date','Time','CheckoutSuccess','CheckoutFail','RenewedSuccess','RenewedFail','UserLoginSuccess','UserLoginFail','PaymentSuccess','PaymentFailed','CoinboxEmptyCount', 'SuccessfulTransactions', 'FailedTransactions', 'TotalTransactions']
 output_fields = [0, 1, 2, 8, 9, 10, 11, 13, 14, 15, 17, 18, 19]

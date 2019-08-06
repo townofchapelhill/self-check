@@ -12,7 +12,7 @@ Provides Hourly and Daily KPIs for the library Self-Check stations
 
 ### Methodology 
 1. Scheduled report files from the Bibliotheca web portal are sent to the Opendata email
-2. An outlook macro downloads the attachment to a predetermined folder on \\chfs\Library\Statistics\Selfchecks
+2. An outlook macro downloads the attachment to a predetermined folder on the town fileshare
 3. OD script pulls file from folder, appends to existing file
 4. OD powershell script dedups the data
 5. OD loads to ODS and publishes on a regular schedule

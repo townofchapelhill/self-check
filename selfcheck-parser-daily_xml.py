@@ -9,7 +9,6 @@ import filename_secrets
 
 
 # Identify fields for CSV output
-#csv_header = ['Date', 'CheckoutSuccess', 'CheckoutFail', 'CheckinSuccess', 'CheckinFail', 'ReturnSuccess', 'ReturnFail', 'ReturnSessionStartCount','ItemSortedCount', 'ItemRejectedCount', 'RenewedSuccess','RenewedFail', 'UserLoginSuccess','UserLoginFail', 'LmsOfflineCount', 'PaymentSuccess', 'PaymentFailed', 'CoinboxEmptyCount', 'SuccessfulTransactions', 'FailedTransactions', 'CheckOutBookCount', 'TotalTransactions']
 csv_header = ['Date', 'CheckoutSuccess', 'CheckoutFail', 'CheckinSuccess', 'CheckinFail', 'ReturnSessionStartCount', 'ReturnSuccess', 'ReturnFail', 'RenewedSuccess','RenewedFail', 'UserLoginSuccess','UserLoginFail', 'LmsOfflineCount', 'PaymentSuccess', 'PaymentFailed', 'CoinboxEmptyCount', 'SuccessfulTransactions', 'FailedTransactions', 'CheckOutBookCount', 'TotalTransactions']
 
 output_fields = ['tbDateToggle', 'CheckoutOKCount', 'CheckoutFailedCount1', 'CheckinOKCount', 'CheckinFailedCount', 'ReturnSessionStartCount', 'ItemSortedCount2', 'ItemRejectedCount2', 'RenewedOKCount','RenewedFailedCount', 'UserLoginCount','UserLoginFailedCount', 'LmsOfflineCount', 'PaymentCount', 'PaymentFailedCount', 'CoinboxEmptyCount', 'SuccessfulTransactions', 'FailedTransactions', 'CheckOutBookCount', 'TotalTransactions']
