@@ -8,7 +8,6 @@ import re
 import csv
 import filename_secrets
 
-
 production_datasets_path = pathlib.Path(filename_secrets.productionStaging)
 selfcheck_data_path =  pathlib.Path(filename_secrets.selfcheckStatistics)
 
@@ -40,7 +39,6 @@ except  Exception:
 with open(self_check_output_daily, 'a+') as output_file:
     csvwriter = csv.writer(output_file, dialect='excel')
     #csvwriter.writerow(csv_header)
-
 
     # Select each row aggregate with a date (dd month yyyy) in the first field (daily total)
     for row in range(0, len(worksheet_list)):
